@@ -1,0 +1,37 @@
+******** CORE0
+Task name: ISR_10, period: 700.0us, priority: 40, preemptionType: preemptive, response time: 36.33714285714285us, wcet: 36.33714285714285, utilization: 0.05191020408163265
+Task name: ISR_5, period: 900.0us, priority: 39, preemptionType: preemptive, response time: 209.8685714285714us, wcet: 173.53142857142856, utilization: 0.24472290249433104
+Task name: ISR_6, period: 1100.0us, priority: 38, preemptionType: preemptive, response time: 248.5542857142857us, wcet: 38.68571428571428, utilization: 0.2798917336631622
+Task name: ISR_4, period: 1500.0us, priority: 37, preemptionType: preemptive, response time: 492.58285714285716us, wcet: 244.0285714285714, utilization: 0.4425774479488765
+Task name: ISR_8, period: 1700.0us, priority: 36, preemptionType: preemptive, response time: 691.2314285714285us, wcet: 198.64857142857142, utilization: 0.5594295487892126
+Task name: ISR_7, period: 4900.0us, priority: 35, preemptionType: preemptive, response time: 1161.4257142857143us, wcet: 221.64, utilization: 0.6046622018504371
+Task name: ISR_11, period: 5000.0us, priority: 34, preemptionType: preemptive, response time: 1358.2171428571428us, wcet: 196.79142857142855, utilization: 0.6440204875647227
+Task name: ISR_9, period: 6000.0us, priority: 33, preemptionType: preemptive, response time: 2157.952857142857us, wcet: 110.85285714285715, utilization: 0.6624959637551989
+******** CORE1
+Task name: Task_1ms, period: 1000.0us, priority: 15, preemptionType: preemptive, response time: 729.7714285714286us, wcet: 729.7714285714286, utilization: 0.7297714285714286
+Task name: Angle_Sync, period: 6660.0us, priority: 14, preemptionType: preemptive, response time: 5944.279342857142us, wcet: 1565.650771428571, utilization: 0.964854126984127
+******** CORE2
+Task name: Task_2ms, period: 2000.0us, priority: 13, preemptionType: preemptive, response time: 236.5387142857142us, wcet: 236.5387142857142, utilization: 0.1182693571428571
+Task name: Task_5ms, period: 5000.0us, priority: 12, preemptionType: preemptive, response time: 891.0044285714287us, wcet: 654.4657142857144, utilization: 0.24916249999999998
+Task name: Task_20ms, period: 20000.0us, priority: 9, preemptionType: cooperative, response time: 12689.54528571429us, wcet: 8876.96571428572, utilization: 0.693010785714286
+Task name: Task_50ms, period: 50000.0us, priority: 8, preemptionType: cooperative, response time: 15914.112571428577us, wcet: 2333.5628571428574, utilization: 0.7396820428571431
+Task name: Task_100ms, period: 100000.0us, priority: 7, preemptionType: cooperative, response time: 38483.04857142859us, wcet: 8383.7, utilization: 0.8235190428571432
+Task name: Task_200ms, period: 200000.0us, priority: 6, preemptionType: cooperative, response time: 38958.77428571429us, wcet: 497.13428571428574, utilization: 0.8260047142857146
+Task name: Task_1000ms, period: 1000000.0us, priority: 5, preemptionType: cooperative, response time: 39644.20571428573us, wcet: 709.3771428571431, utilization: 0.8267140914285718
+******** CORE3
+Task name: ISR_1, period: 9500.0us, priority: 32, preemptionType: preemptive, response time: 50.03142857142858us, wcet: 50.03142857142858, utilization: 0.0052664661654135345
+Task name: ISR_2, period: 9500.0us, priority: 31, preemptionType: preemptive, response time: 79.17142857142858us, wcet: 29.14, utilization: 0.008333834586466166
+Task name: ISR_3, period: 9500.0us, priority: 30, preemptionType: preemptive, response time: 117.84857142857143us, wcet: 38.677142857142854, utilization: 0.012405112781954887
+Task name: Task_10ms, period: 10000.0us, priority: 11, preemptionType: preemptive, response time: 9953.647542857147us, wcet: 9717.950400000003, utilization: 0.9842001527819553
+***************EffectChain_1
+Effect chain 1: 13376.91657142857us
+***************EffectChain_2
+Runnable_100ms_7 response time+period: 116322.66557142857us
+Runnable_10ms_19 response time+period: 10795.301371428572us
+Runnable_2ms_8 response time+period: 2082.778428571429us
+Total RT of the effect chain: 129200.74537142858
+***************EffectChain_3
+Runnable_sporadic_700us_800us_3 response time+period: 736.3371428571429us
+Runnable_2ms_3 response time+period: 2030.7672857142857us
+Runnable_50ms_36 response time+period: 64687.77828571429us
+Total RT of the effect chain: 67454.88271428572
