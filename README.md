@@ -4,8 +4,9 @@ The challenge consists in the analysis of a powertrain application that runs in 
 3) compute end-to-end latencies (age/reaction latency) of the event chains (best, average and worst case). The solution should be able to handle multi-rate effect chains consisting of tasks with harmonic and non-harmonic periods. 
 4) propose a different label mapping that could possibly reduce the memory access overheads. 5) factor in the effects of contention on the interconnect in the memory access overhead and show the impacts on end-to-end latencies.
 The description of this work is depicted in the file 'FMTV_WATERS_2017.pdf'.
+The files label_memory_mapping_LET_h.txt & label_memory_mapping_implicit.txt show the cost of LET and implicit approaches.
 
-Then is presented some information abstracted from the AMALTHEA model.
+Here is presented some information abstracted from the AMALTHEA model.
 
 ## [AMALTHEA model data]
 
