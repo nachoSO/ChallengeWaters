@@ -1,4 +1,4 @@
-## [WORK IN PROGRESS]
+## [AMALTHEA model data]
 
 <p align="center">
   <img src="./IMGS/matrix_communication.png" width="100%" height="100%">
@@ -22,7 +22,8 @@
 
   </tr>
 </table>
-   
+
+## [Effect chains]
 <p align="center">
            <img src="./IMGS/effect_chain1.jpg" width="80%" height="80%">
 </p>
