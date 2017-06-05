@@ -27,5 +27,5 @@
            <img src="./IMGS/effect_chain1.jpg" width="80%" height="80%">
 </p>
  <p align="center">
-           <img src="./IMGS/effect_chain2.png" width="80%" height="80%">
+           <img src="./IMGS/effect_chain2.jpg" width="80%" height="80%">
  </p>
