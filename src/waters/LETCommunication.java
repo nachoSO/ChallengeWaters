@@ -1,10 +1,8 @@
 package waters;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
+
 
 public class LETCommunication {
 	
@@ -41,7 +39,15 @@ public class LETCommunication {
 		return Q;
 	}
 	
+	// new calculation
 	int nth_Window (int Task_W, int Task_R, int n) throws IOException{
+		int w = 0;
+		w = Qpoint(Task_W,Task_R,n) - Ppoint(Task_W,Task_R,n);
+		return w;
+	}
+	
+	//old calculation
+	/*int nth_Window (int Task_W, int Task_R, int n) throws IOException{
 		int w = 0;
 		int Task_max = Math.max(Task_W, Task_R);
 		int Task_min = Math.min(Task_W, Task_R);
@@ -56,7 +62,7 @@ public class LETCommunication {
 			w = t1 - (int)Math.floor(t2)*Task_min;
 		}
 		return w;
-	}
+	}*/
 	
 	int Hyperperiod (int Task_A, int Task_B) throws IOException{
 		int x = 0;

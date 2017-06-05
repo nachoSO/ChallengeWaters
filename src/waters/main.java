@@ -48,36 +48,35 @@ public class main {
 	   //load all XML information of specific core
 	   System.out.println("Loading cores...");
 	   Core core0=load_core("Scheduler_CORE0?type=os.TaskScheduler",xmlDocument,xPath); //all preempptive |  U: 0.9701929364654952
-	   Core core1=load_core("Scheduler_CORE1?type=os.TaskScheduler",xmlDocument,xPath); //all preempptive | U: 1.3357246246246244
+	   //Core core1=load_core("Scheduler_CORE1?type=os.TaskScheduler",xmlDocument,xPath); //all preempptive | U: 1.3357246246246244
 	   Core core2=load_core("Scheduler_CORE2?type=os.TaskScheduler",xmlDocument,xPath); //preempptive & cooperative | U: 1.0685265349999995
 	   Core core3=load_core("Scheduler_CORE3?type=os.TaskScheduler",xmlDocument,xPath); //all preempptive | U: 1.1793503684210531
 	   //Core core0=load_manual_core();
 	   //order tasks by priority
 	   Collections.sort(core0.tasks);
-	   Collections.sort(core1.tasks);
+	   //Collections.sort(core1.tasks);
 	   Collections.sort(core2.tasks);
 	   Collections.sort(core3.tasks);
 	   System.out.println("Cores already loaded");
 	   
 	   LinkedList<Core> cores=new LinkedList<Core>();
 	   cores.add(core0);
-	   cores.add(core1);
+	   //cores.add(core1);
 	   cores.add(core2);
 	   cores.add(core3);
-	   matrixCommunication(cores,xmlDocument,xPath);
-	   System.out.println("Matrix communication computed");
-	   taskDependencies(cores);
+	   //matrixCommunication(cores,xmlDocument,xPath);
+	   //System.out.println("Matrix communication computed");
 	   
 	   //this function balance the utilization	
-	   //increaseWCET(core0,core1,core2,core3);
+	   //increaseWCET2(core0,core2,core3);
 	   //calculate response time of all core tasks
-	   /* System.out.println("Computing RTA");
+	   System.out.println("Computing RTA");
 	   core0.RTAcore(); 
-	   core1.RTAcore(); 
+	   //core1.RTAcore(); 
 	   core2.RTAcore(); 
 	   core3.RTAcore(); 
+	   queryECExplicit(core0,core2,core3);
 	   
-
 	   //print results
 	   for(int j=0;j<cores.size();j++){
 		   double executionTime=0.0;
@@ -91,17 +90,57 @@ public class main {
 			   System.out.println(cores.get(j).tasks.get(i) + ", utilization: "+utilization);
 		   }
 	   }
+	   /* 
 	   computeEffectChain(cores,"EffectChain_1",xmlDocument,xPath);
 	   computeEffectChain(cores,"EffectChain_2",xmlDocument,xPath);
 	   computeEffectChain(cores,"EffectChain_3",xmlDocument,xPath);
 	   */
 	   
    }
+   /* 
+	public ImplicitCommunication (int Task1 , double BCST1_0, double WCRT1_0, double BCST1_last, double WCRT1_last, 
+			int Task2 , double BCST2_0, double WCRT2_0, double BCST2_last, double WCRT2_last, 
+			int Task3 , double BCST3_0, double WCRT3_0, double BCST3_last, double WCRT3_last) {
+		
+	}
+	*/
+   private static void queryECExplicit(Core core0,Core core2, Core core3) {
+	   	for(Task t:core0.tasks){
+	   		if(t.name.equals("ISR_10")){
+	   		
+				System.out.println("ISR_10 | BCST1_0: "+t.runnables.getFirst().BCST+" WCRT1_0: "+t.runnables.getFirst().WCST
+						+" BCST1_last: "+t.runnables.getLast().BCST + "WCRT1_last: "+t.runnables.getLast().WCST);
 
-   //this function shows the task dependencies between tasks
-   private static void taskDependencies(LinkedList<Core> cores) {
+	   		}
+	   	}
+	   	for(Task t:core2.tasks){
+	   		if(t.name.equals("Task_100ms")){
+	   			System.out.println("Task_100ms | BCST1_0: "+t.runnables.getFirst().BCST+" WCRT1_0: "+t.runnables.getFirst().WCST
+						+" BCST1_last: "+t.runnables.getLast().BCST + "WCRT1_last: "+t.runnables.getLast().WCST);
 
+	   		}
+	   		if(t.name.equals("Task_2ms")){
+	   			System.out.println("Task_2ms | BCST1_0: "+t.runnables.getFirst().BCST+" WCRT1_0: "+t.runnables.getFirst().WCST
+						+" BCST1_last: "+t.runnables.getLast().BCST + "WCRT1_last: "+t.runnables.getLast().WCST);
+
+	   		}
+	   		if(t.name.equals("Task_50ms")){
+	   			System.out.println("Task_50ms | BCST1_0: "+t.runnables.getFirst().BCST+" WCRT1_0: "+t.runnables.getFirst().WCST
+						+" BCST1_last: "+t.runnables.getLast().BCST + "WCRT1_last: "+t.runnables.getLast().WCST);
+
+	   		}
+	   	}
+	   	for(Task t:core3.tasks){
+	   		if(t.name.equals("Task_10ms")){
+   				System.out.println("Task_10ms | BCST1_0: "+t.runnables.getFirst().BCST+" WCRT1_0: "+t.runnables.getFirst().WCST
+						+" BCST1_last: "+t.runnables.getLast().BCST + "WCRT1_last: "+t.runnables.getLast().WCST);
+
+	   			
+	   		}
+	   	}
+	   	
    }
+
 
    //This function prints the matrix communication
    static void matrixCommunication(LinkedList<Core> cores, Document xmlDocument,XPath xPath) throws FileNotFoundException, UnsupportedEncodingException, XPathExpressionException{
@@ -192,6 +231,11 @@ public class main {
 				   }
 				   
 			   }
+			   double costReading=IMPLICIT_TcostCopyInPerTask;
+			   double costPublishing=IMPLICIT_TcostCopyOutPerTask;
+			   t_src.runnables.addFirst(new Runnable("Copy_In",costReading));
+			   t_src.runnables.add(new Runnable("Copy_Out",costPublishing));
+
 			   writer_IMPLICIT.println("******** Cost copy in task: "+t_src.name+" is: "+IMPLICIT_TcostCopyInPerTask+ " cycles");
 			   writer_IMPLICIT.println("******** Cost copy out task: "+t_src.name+" is: "+IMPLICIT_TcostCopyOutPerTask+ " cycles");
 			   writer_IMPLICIT.println("******** Total footprint used for shared_labels task: "+t_src.name+" is: "+IMPLICIT_footprint+ " bits");
@@ -205,31 +249,31 @@ public class main {
 
    }
 
-	   private static String typeOfCommunication(String t_src, String t_dst) {
-		   String communicationType="h";
-		   if(t_src.contains("ISR") || t_dst.contains("ISR") || t_src.contains("Angle") || t_dst.contains("Angle")){
-			   communicationType="a";
-		   }else{
-			   if(t_src.contains("Task_") && t_dst.contains("Task_")){
-				   int t1=Integer.parseInt(t_src.replace("Task_","").replace("ms",""));
-				   int t2=Integer.parseInt(t_dst.replace("Task_","").replace("ms",""));
-				   if(t1>t2){
-					   int mod=t1%t2;
-					   if(mod!=0)
-						   communicationType="nh";
-				   }else{
-					   int mod=t2%t1;
-					   if(mod!=0)
-						   communicationType="nh";
-				   }
-		   	   }else{
-		   		   communicationType="nh";
-		   	   }
-		   }
-		   return communicationType;
+   private static String typeOfCommunication(String t_src, String t_dst) {
+	   String communicationType="h";
+	   if(t_src.contains("ISR") || t_dst.contains("ISR") || t_src.contains("Angle") || t_dst.contains("Angle")){
+		   communicationType="a";
+	   }else{
+		   if(t_src.contains("Task_") && t_dst.contains("Task_")){
+			   int t1=Integer.parseInt(t_src.replace("Task_","").replace("ms",""));
+			   int t2=Integer.parseInt(t_dst.replace("Task_","").replace("ms",""));
+			   if(t1>t2){
+				   int mod=t1%t2;
+				   if(mod!=0)
+					   communicationType="nh";
+			   }else{
+				   int mod=t2%t1;
+				   if(mod!=0)
+					   communicationType="nh";
+			   }
+	   	   }else{
+	   		   communicationType="nh";
+	   	   }
 	   }
+	   return communicationType;
+   }
 
-//here we pay in function of where source core and LRAM dest location
+   //here we pay in function of where source core and LRAM dest location
    private static int calculateCostTransaction_LET(String label_src_allocation,String core_source) {
 	   int cost=9;
 	   if(label_src_allocation.substring(label_src_allocation.length() - 1).equals(core_source.substring(core_source.length() - 1)))
@@ -267,31 +311,55 @@ public class main {
    //This function decreases the utilization of all cores
    public static void increaseWCET(Core core0,Core core1, Core core2, Core core3){
 	   for(int i=0;i<core0.tasks.getLast().runnables.size();i++){ //core 0 last task
-		   double wcetR=core0.tasks.getLast().runnables.get(i).executionTime;
+		   double wcetR=core0.tasks.getLast().runnables.get(i).WCET;
 		   double pR=(wcetR*50)/100;
-		   core0.tasks.getLast().runnables.get(i).executionTime=wcetR-pR;
+		   core0.tasks.getLast().runnables.get(i).WCET=wcetR-pR;
 	   }
 	   
 	   core0.tasks.getLast().executionTime=core0.tasks.getLast().processInstructions();
 	   
 	   for(int i=0;i<core1.tasks.getLast().runnables.size();i++){ //core 1 last task
-		   double wcetR=core1.tasks.getLast().runnables.get(i).executionTime;
+		   double wcetR=core1.tasks.getLast().runnables.get(i).WCET;
 		   double pR=(wcetR*63)/100;
-		   core1.tasks.getLast().runnables.get(i).executionTime=wcetR-pR;
+		   core1.tasks.getLast().runnables.get(i).WCET=wcetR-pR;
 	   }
 	   core1.tasks.getLast().executionTime=core1.tasks.getLast().processInstructions();
 	   
 	   for(int i=0;i<core2.tasks.getFirst().runnables.size();i++){ //core 2 first task
-		   double wcetR=core2.tasks.getFirst().runnables.get(i).executionTime;
+		   double wcetR=core2.tasks.getFirst().runnables.get(i).WCET;
 		   double pR=(wcetR*35)/100;
-		   core2.tasks.getFirst().runnables.get(i).executionTime=wcetR-pR;
+		   core2.tasks.getFirst().runnables.get(i).WCET=wcetR-pR;
 	   }
 	   core2.tasks.getFirst().executionTime=core2.tasks.getFirst().processInstructions();
 	   
 	   for(int i=0;i<core3.tasks.getLast().runnables.size();i++){ //core 3 last task
-		   double wcetR=core3.tasks.getLast().runnables.get(i).executionTime;
+		   double wcetR=core3.tasks.getLast().runnables.get(i).WCET;
 		   double pR=(wcetR*16)/100;
-		   core3.tasks.getLast().runnables.get(i).executionTime=wcetR-pR;
+		   core3.tasks.getLast().runnables.get(i).WCET=wcetR-pR;
+	   }
+	   core3.tasks.getLast().executionTime=core3.tasks.getLast().processInstructions();
+   }
+   
+   public static void increaseWCET2(Core core0, Core core2, Core core3){
+	   for(int i=0;i<core0.tasks.getLast().runnables.size();i++){ //core 0 last task
+		   double wcetR=core0.tasks.getLast().runnables.get(i).WCET;
+		   double pR=(wcetR*65)/100;
+		   core0.tasks.getLast().runnables.get(i).WCET=wcetR-pR;
+	   }
+	   
+	   core0.tasks.getLast().executionTime=core0.tasks.getLast().processInstructions();
+	   
+	   for(int i=0;i<core2.tasks.getFirst().runnables.size();i++){ //core 2 first task
+		   double wcetR=core2.tasks.getFirst().runnables.get(i).WCET;
+		   double pR=(wcetR*40)/100;
+		   core2.tasks.getFirst().runnables.get(i).WCET=wcetR-pR;
+	   }
+	   core2.tasks.getFirst().executionTime=core2.tasks.getFirst().processInstructions();
+	   
+	   for(int i=0;i<core3.tasks.getLast().runnables.size();i++){ //core 3 last task
+		   double wcetR=core3.tasks.getLast().runnables.get(i).WCET;
+		   double pR=(wcetR*20)/100;
+		   core3.tasks.getLast().runnables.get(i).WCET=wcetR-pR;
 	   }
 	   core3.tasks.getLast().executionTime=core3.tasks.getLast().processInstructions();
    }
@@ -351,7 +419,7 @@ public class main {
         		   if(cores.get(coreIndex).tasks.get(j).name.equals(taskRunnable)){ //we find task, now we need the runnable
         			   for(int k=0;k<cores.get(coreIndex).tasks.get(j).runnables.size();k++){
         				   if(cores.get(coreIndex).tasks.get(j).runnables.get(k).name.equals(effectChainRunnables.getLast())){
-        					   rtRunnable=cores.get(coreIndex).tasks.get(j).runnables.get(k).responseTime;
+        					   rtRunnable=cores.get(coreIndex).tasks.get(j).runnables.get(k).WCRT;
     						   period=cores.get(coreIndex).tasks.get(j).period;
     						   totalRT+=(rtRunnable+period);
     						   System.out.println("Effect chain 1: "+(rtRunnable+period)+"us");
@@ -371,7 +439,7 @@ public class main {
 	        		   if(cores.get(coreIndex).tasks.get(j).name.equals(taskRunnable)){ //we find task, now we need the runnable
 	        			   for(int k=0;k<cores.get(coreIndex).tasks.get(j).runnables.size();k++){
 	        				   if(cores.get(coreIndex).tasks.get(j).runnables.get(k).name.equals(effectChainRunnables.get(i))){
-	        					   rtRunnable=cores.get(coreIndex).tasks.get(j).runnables.get(k).responseTime;
+	        					   rtRunnable=cores.get(coreIndex).tasks.get(j).runnables.get(k).WCRT;
 	    						   period=cores.get(coreIndex).tasks.get(j).period;
 	    						   totalRT+=(rtRunnable+period);
 	        					   System.out.println(effectChainRunnables.get(i)+" response time+period: "
@@ -390,7 +458,7 @@ public class main {
    //This method loads a simple tasks to test 
    public static Core load_manual_core(){
 	   Core core=new Core("Core0");
-	   
+	   /*
 	   //Task0
 	   Runnable r0T0=new Runnable("Runnable 0",2000),r1T0=new Runnable("Runnable 1",2000),r2T0=new Runnable("Runnable 2",2000);
 	   Task T0=new Task("Task 0",100.0,11,"preemptive");
@@ -408,7 +476,7 @@ public class main {
 	   Task T2=new Task("Task 2",550.0,8,"preemptive");
 	   T2.addRunnable(r0T2);T2.addRunnable(r1T2);T2.addRunnable(r2T2);
 	   core.addTask(T2);
-	   
+	    */
 	   return core;
    }
    
@@ -440,8 +508,17 @@ public class main {
 			   String runnableName=allRunnables.item(j).getFirstChild().getNodeValue().replace("?type=sw.Runnable", ""); //get one specific runnable
 			   expression="*/swModel/runnables[@name= '" + runnableName + "']/runnableItems/deviation/upperBound/@value";
 			   NodeList instructionUpperBound = (NodeList) xPath.compile(expression).evaluate(xmlDocument, XPathConstants.NODESET); //get instructionUpperBound
-			   int nInstructions=Integer.parseInt(instructionUpperBound.item(0).getFirstChild().getNodeValue());
-			   Runnable r=new Runnable(runnableName,nInstructions);
+			   int nWInstructions=Integer.parseInt(instructionUpperBound.item(0).getFirstChild().getNodeValue());
+
+			   expression="*/swModel/runnables[@name= '" + runnableName + "']/runnableItems/deviation/lowerBound/@value";
+			   NodeList instructionLowerBound = (NodeList) xPath.compile(expression).evaluate(xmlDocument, XPathConstants.NODESET); //get instructionLowerBound
+			   int nBInstructions=Integer.parseInt(instructionLowerBound.item(0).getFirstChild().getNodeValue());
+			   
+			   expression="*/swModel/runnables[@name= '" + runnableName + "']/runnableItems/deviation/distribution/mean/@value";
+			   NodeList instructionMean = (NodeList) xPath.compile(expression).evaluate(xmlDocument, XPathConstants.NODESET); //get instructionMeanBound
+			   int nAInstructions=Integer.parseInt(instructionMean.item(0).getFirstChild().getNodeValue());
+			   
+			   Runnable r = new Runnable(runnableName,nWInstructions, nBInstructions, nAInstructions);
 			   t.addRunnable(r);
 		   }
 		   core.addTask(t);
@@ -451,30 +528,41 @@ public class main {
 	   for(Task t: core.tasks){
 		   for(Runnable r: t.runnables){
 			   
-			   String expression_label_name="*/swModel/runnables[@name= '" + r.name + "']/runnableItems/@data";
+			   String expression_label_name = "*/swModel/runnables[@name= '" + r.name + "']/runnableItems/@data";
 			   NodeList allLabels = (NodeList) xPath.compile(expression_label_name).evaluate(xmlDocument, XPathConstants.NODESET); 
 			   
 			   for (int j = 0; j < allLabels.getLength(); j++) {
 				   String label=allLabels.item(j).getFirstChild().getNodeValue();
-				   String expression_access="*/swModel/runnables[@name= '" + r.name + "']/runnableItems[@data= '" + label + "']/@access";
+				   String expression_access = "*/swModel/runnables[@name= '" + r.name + "']/runnableItems[@data= '" + label + "']/@access";
+
 				   NodeList label_access = (NodeList) xPath.compile(expression_access).evaluate(xmlDocument, XPathConstants.NODESET); 
 				   String access=label_access.item(0).getFirstChild().getNodeValue();
 
 				   if(access.equals("read")){
 					   t.addLabel(label.replace("?type=sw.Label", "")+"_r");
+					  
 				   }
 				   else{
 					   t.addLabel(label.replace("?type=sw.Label", "")+"_w");   
+					   
 				   }
 			   }
 		   }
 		   
-	   }
-
+	   }	
+	   
 	   return core;
    }
+   
+   private static int calculateCostCopyEXPLICIT(String label_src_allocation, String core_source) {
+	   int cost=9;
+	   if(label_src_allocation.substring(label_src_allocation.length() - 1).equals(core_source.substring(core_source.length() - 1)))
+		   cost=1;
+	   
+	   return cost;
+   }
 
-   //This function returns the preemption type of task "taskName"
+	//This function returns the preemption type of task "taskName"
    public static String preemptionType_of_task(String taskName, Document xmlDocument,XPath xPath) throws XPathExpressionException, FileNotFoundException, UnsupportedEncodingException{
 	   String preemptionType;
        String expression2 = "*/swModel/tasks[@name='" + taskName + "']/@preemption";
@@ -645,7 +733,7 @@ public class main {
    }
    
    
- //This function extracts the label-mapping
+   //This function extracts the label-mapping
    public static void extractLabelMapping(Document xmlDocument,XPath xPath) throws XPathExpressionException, FileNotFoundException, UnsupportedEncodingException{
 	   LinkedList<String> GRAM=new LinkedList<String>();
 	   LinkedList<String> LRAM0=new LinkedList<String>();

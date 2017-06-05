@@ -2,6 +2,10 @@ package waters;
 
 import java.util.LinkedList;
 
+//https://www.gliwa.com/ 
+//LabCar
+//start time
+//tool vs reality
 
 public class Task implements Comparable<Task> {
 	String name;
@@ -12,7 +16,11 @@ public class Task implements Comparable<Task> {
 	String preemptionType;
 	LinkedList<Runnable> runnables=new LinkedList<Runnable>();
 	double responseTime=0;
-	double executionTime=0; 
+	double executionTime=0;
+	//publishing and reading point costs
+	double costReading; 
+	double costPublishing;
+	
 	LinkedList<String> labels = new LinkedList<String>();
 	
 	public void addLabel(String label){
@@ -36,7 +44,7 @@ public class Task implements Comparable<Task> {
 	public double processInstructions(){
 		double totalExecutionTime=0;
 		for(int i=0;i<runnables.size();i++)
-			totalExecutionTime+=runnables.get(i).executionTime;
+			totalExecutionTime+=runnables.get(i).WCET;
 		return totalExecutionTime;
 	} 
 
