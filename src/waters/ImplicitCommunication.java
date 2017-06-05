@@ -59,7 +59,6 @@ private double WCRT_3_last = 0;
 	}
 	
 	
-	
 	public double DeltaCalculation (int Task_W, double BCST_W_0, double WCRT_W_0, double BCST_W_last, double WCRT_W_last,
 			int Task_R,  double BCST_R_0, double WCRT_R_0, double BCST_R_last, double WCRT_R_last) throws IOException {
 		double phi_W = PhiCalculation(Task_W, BCST_W_last, WCRT_W_last); 
