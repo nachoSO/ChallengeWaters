@@ -32,7 +32,7 @@ Then is presented some information abstracted from the AMALTHEA model.
   </tr>
 </table>
 
-## [Effect chains]
+## [Effect chains] src/waters/[LETCommunication/ImplicitCommunication/ExplicitCommunication]
 <p align="center">
            <img src="./IMGS/effect_chain1.jpg" width="80%" height="80%">
 </p>
