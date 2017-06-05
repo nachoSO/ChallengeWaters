@@ -1,4 +1,4 @@
-package WATERS2017;
+package waters;
 
 import java.io.BufferedReader;
 import java.io.IOException;
