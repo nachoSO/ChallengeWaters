@@ -18,6 +18,18 @@
            <br>
       </p>
     </th>
+    <th>
+    <p align="center">
+           <img src="./IMGS/effect_chain1.jpg" width="80%" height="80%">
+           <br>
+      </p>
+    </th>
+     <th>
+    <p align="center">
+           <img src="./IMGS/effect_chain2.png" width="80%" height="80%">
+           <br>
+      </p>
+    </th>
   </tr>
 </table>
 
