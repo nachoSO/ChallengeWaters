@@ -50,11 +50,11 @@ private double WCRT_Task_3 = 0;
 	
 	public double AlphaCalculation (int Task_W,  double BCST_W, double WCRT_W, int Task_R,  double BCST_R, double WCRT_R) throws IOException {
 		double phi_W = PhiCalculation(Task_W, BCST_W, WCRT_W); 
-		System.out.println(phi_W);
+		//System.out.println(phi_W);
 		double phi_R = PhiCalculation(Task_R, BCST_R, WCRT_R);
-		System.out.println(phi_R);
+		//System.out.println(phi_R);
 		double q = phi_W - phi_R;
-		System.out.println(q);
+		//System.out.println(q);
 		double delta = Math.min(phi_R, phi_W);
 		double max = Math.max(q, 0);
 		double alpha = delta + Math.floor(max/((double)Task_R))*Task_R;

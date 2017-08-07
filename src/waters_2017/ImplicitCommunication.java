@@ -80,7 +80,7 @@ private double WCRT_3_last = 0;
 		double delta = Math.min(phi_R, phi_W);
 		double max = Math.max(q, 0);
 		double alpha = delta + Math.floor(max/((double)Task_R))*Task_R + DeltaImplicit(Task_R, WCRT_R_last, WCRT_R_0);
-		System.out.println(alpha);
+		//System.out.println(alpha);
 		return alpha;
 	}
 	
@@ -102,7 +102,7 @@ private double WCRT_3_last = 0;
 		//double delta = Math.min(phi_R, phi_W);
 		//double max = Math.max(q, 0);
 		//double alpha = delta + Math.floor(max/Task_R)*Task_R;
-		System.out.println(rho);
+		//System.out.println(rho);
 		return rho;
 	}
 	
