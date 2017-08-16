@@ -270,6 +270,7 @@ public class LETCommunication {
 		int L2L = 0;
 		int maxL2L = 0;
 		int Theta = 0;
+		System.out.println("Theta, Q_(n+1), Q_n, L2L");
 		for(int k=0;k<List1.size();k=k+6){
 	
 			n = List1.get(k + 3);
@@ -288,19 +289,71 @@ public class LETCommunication {
 				
 			Q_JK_0 = P_JK_0 + w_JK_0;
 			Q_JK_1 = P_JK_1 + w_JK_1;
-			L2L = Q_JK_1 - Q_JK_0 + List2.get(Theta);
-			System.out.println(Q_JK_0 +", " +  Q_JK_1 + ", " + List2.get(Theta) + ", " + L2L);
+			L2L = Q_JK_1 - Q_JK_0 + List2.get(Theta) + Task_1;
+
+			System.out.println(List2.get(Theta) + ", " + Q_JK_0 +", " +  Q_JK_1 + ", " +  L2L);
 			maxL2L=Math.max(L2L, maxL2L);
 			Theta ++;
 		}
 		
-		maxL2L = maxL2L + Task_1;
+		//maxL2L = maxL2L;
 		System.out.println("The last-2-last propagation delay of the EC is : " + maxL2L  );
+		System.out.println("--------------------------------------------------------------------------------------------------------------------");
 		return maxL2L;
 		
 	}
 	
 	public int F2FCalculation () throws IOException {
+		System.out.println(Task_1 + "ms and " + Task_2 +"ms establish " + CommunicationType(Task_1, Task_2));
+		System.out.println(Task_2 + "ms and " + Task_3 +"ms establish " + CommunicationType(Task_2, Task_3));
+		System.out.println("The hyperperiod of the EC : " + Task_1 + "ms -->" + Task_2 + "ms -->" + Task_3 + "ms is : " + ECHyperperiod(Task_1, Task_2, Task_3));
+		System.out.println("Number of bacis paths : " + BasicPathNumber());
+		// we are interested in the last three elements of the tuple
+		ArrayList<Integer> List1 = Algorithm1();
+		ArrayList<Integer> List2 = ThetaCalculation();
+		int n = 0;
+		int P_JK_0 = 0;
+		int w_JK_0 = 0;
+		int P_JK_1 = 0;
+		int w_JK_1 = 0;
+		int Q_JK_0 = 0;
+		int Q_JK_1 = 0;
+		int F2F = 0;
+		int maxF2F = 0;
+		int Theta = 0;
+		//System.out.println("Theta, Q_(n+1), Q_n, F2F");
+		for(int k=0;k<List1.size();k=k+6){
+	
+			n = List1.get(k + 3);
+			P_JK_0 = List1.get(k + 4);
+			w_JK_0 = List1.get(k + 5);
+			
+			if (k == ((List1.size()/6)-1)*6  ){
+			P_JK_1 = List1.get(4) + ECHyperperiod(Task_1, Task_2, Task_3);
+			w_JK_1 = List1.get(5);
+			}
+			
+			else {
+				P_JK_1 = List1.get(k + 10);
+				w_JK_1 = List1.get(k + 11);
+			}
+				
+			Q_JK_0 = P_JK_0 + w_JK_0;
+			Q_JK_1 = P_JK_1 + w_JK_1;
+			F2F = Q_JK_1 - Q_JK_0 + List2.get(Theta) + Task_1 + Task_3;
+
+			//System.out.println(List2.get(Theta) + ", " + Q_JK_0 +", " +  Q_JK_1 + ", " +  F2F);
+			maxF2F=Math.max(F2F, maxF2F);
+			Theta ++;
+		}
+		
+		//maxL2L = maxL2L;
+		System.out.println("The first-2-first propagation delay of the EC is : " + maxF2F  );
+		System.out.println("--------------------------------------------------------------------------------------------------------------------");
+		return maxF2F;
+	}
+	
+	/*public int F2FCalculation () throws IOException {
 		System.out.println(Task_1 + "ms and " + Task_2 +"ms establish " + CommunicationType(Task_1, Task_2));
 		System.out.println(Task_2 + "ms and " + Task_3 +"ms establish " + CommunicationType(Task_2, Task_3));
 		System.out.println("The hyperperiod of the EC : " + Task_1 + "ms -->" + Task_2 + "ms -->" + Task_3 + "ms is : " + ECHyperperiod(Task_1, Task_2, Task_3));
@@ -345,6 +398,6 @@ public class LETCommunication {
 		maxF2F = maxF2F + Task_3;
 		System.out.println("The first-2-first propagation delay of the EC is : " + maxF2F  );
 		return maxF2F;
-	}
+	}*/
 	
 }

@@ -48,7 +48,7 @@ public class Core implements Serializable{
 			response_n_accum+=tasks.get(taskNum).runnables.get(i).WCET;
 			
 			if(i>0)
-				best_accum+=tasks.get(taskNum).runnables.get(i).BCET;
+				best_accum+=tasks.get(taskNum).runnables.get(i-1).BCET;
 			else
 				best_accum=0;
 			
@@ -117,7 +117,7 @@ public class Core implements Serializable{
 			executionTimeRunnableAcum+=tasks.get(taskNum).runnables.get(i).WCET;
 
 			if(i>0)
-				best_accum+=tasks.get(taskNum).runnables.get(i).BCET;
+				best_accum+=tasks.get(taskNum).runnables.get(i-1).BCET;
 			else
 				best_accum=0;
 			

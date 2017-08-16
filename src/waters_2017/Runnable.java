@@ -20,7 +20,7 @@ public class Runnable implements Serializable {
 	double readLatency;
 	double writeLatency;
 	LinkedList<Label> labels = new LinkedList<Label>();
-	double frequency=250000000.0;
+	double frequency=300000000.0;
 	public void addLabel(Label label){
 		labels.add(label);
 	}
