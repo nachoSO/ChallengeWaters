@@ -10,7 +10,7 @@ public class LETCommunication {
 	private int Task_2 = 0;
 	private int Task_3 = 0;
 	
-	// Tasks are given in ms
+	// Tasks are given in us!!!
 	// Effect-chain Task1 --> Task2 --> Task3
 	public LETCommunication (int Task1, int Task2, int Task3) {
 		Task_1 = Task1;
@@ -233,9 +233,9 @@ public class LETCommunication {
 	}
 
 	public int L2FCalculation () throws IOException {
-		System.out.println(Task_1 + "ms and " + Task_2 +"ms establish " + CommunicationType(Task_1, Task_2));
-		System.out.println(Task_2 + "ms and " + Task_3 +"ms establish " + CommunicationType(Task_2, Task_3));
-		System.out.println("The hyperperiod of the EC : " + Task_1 + "ms -->" + Task_2 + "ms -->" + Task_3 + "ms is : " + ECHyperperiod(Task_1, Task_2, Task_3));
+		System.out.println(Task_1 + "us and " + Task_2 +"us establish " + CommunicationType(Task_1, Task_2));
+		System.out.println(Task_2 + "us and " + Task_3 +"us establish " + CommunicationType(Task_2, Task_3));
+		System.out.println("The hyperperiod of the EC : " + Task_1 + "us -->" + Task_2 + "us -->" + Task_3 + "us is : " + ECHyperperiod(Task_1, Task_2, Task_3));
 		System.out.println("Number of bacis paths : " + BasicPathNumber());
 		
 		ArrayList<Integer> Thetas = ThetaCalculation();
@@ -253,9 +253,9 @@ public class LETCommunication {
 	}
 	
 	public int L2LCalculation () throws IOException {
-		System.out.println(Task_1 + "ms and " + Task_2 +"ms establish " + CommunicationType(Task_1, Task_2));
-		System.out.println(Task_2 + "ms and " + Task_3 +"ms establish " + CommunicationType(Task_2, Task_3));
-		System.out.println("The hyperperiod of the EC : " + Task_1 + "ms -->" + Task_2 + "ms -->" + Task_3 + "ms is : " + ECHyperperiod(Task_1, Task_2, Task_3));
+		System.out.println(Task_1 + "ms and " + Task_2 +"us establish " + CommunicationType(Task_1, Task_2));
+		System.out.println(Task_2 + "ms and " + Task_3 +"us establish " + CommunicationType(Task_2, Task_3));
+		System.out.println("The hyperperiod of the EC : " + Task_1 + "us -->" + Task_2 + "us -->" + Task_3 + "us is : " + ECHyperperiod(Task_1, Task_2, Task_3));
 		System.out.println("Number of bacis paths : " + BasicPathNumber());
 		// we are interested in the last three elements of the tuple
 		ArrayList<Integer> List1 = Algorithm1();
@@ -304,9 +304,9 @@ public class LETCommunication {
 	}
 	
 	public int F2FCalculation () throws IOException {
-		System.out.println(Task_1 + "ms and " + Task_2 +"ms establish " + CommunicationType(Task_1, Task_2));
-		System.out.println(Task_2 + "ms and " + Task_3 +"ms establish " + CommunicationType(Task_2, Task_3));
-		System.out.println("The hyperperiod of the EC : " + Task_1 + "ms -->" + Task_2 + "ms -->" + Task_3 + "ms is : " + ECHyperperiod(Task_1, Task_2, Task_3));
+		System.out.println(Task_1 + "ms and " + Task_2 +"us establish " + CommunicationType(Task_1, Task_2));
+		System.out.println(Task_2 + "ms and " + Task_3 +"us establish " + CommunicationType(Task_2, Task_3));
+		System.out.println("The hyperperiod of the EC : " + Task_1 + "us -->" + Task_2 + "us -->" + Task_3 + "ms is : " + ECHyperperiod(Task_1, Task_2, Task_3));
 		System.out.println("Number of bacis paths : " + BasicPathNumber());
 		// we are interested in the last three elements of the tuple
 		ArrayList<Integer> List1 = Algorithm1();

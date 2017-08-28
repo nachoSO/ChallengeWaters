@@ -82,7 +82,7 @@ public class main {
 	   LinkedList<Core> coresExplicit = new LinkedList<Core>();
        coresExplicit=computeExplicit(cores);
        coresImplicit=computeImplicit(coresImplicit);
-
+       //helper_communication.matrixCommunication(coresExplicit,xmlDocument,xPath);
       
        System.out.println("FINISH");
        
@@ -94,7 +94,7 @@ public class main {
        helper_communication.queryEC(coresImplicit.get(0),coresImplicit.get(2),coresImplicit.get(3),"IMPLICIT");
         */
        
-       computeEC1(coresExplicit, coresImplicit);
+       //computeEC1(coresExplicit, coresImplicit);
        //computeEC2(coresExplicit, coresImplicit);
      
    }
@@ -114,7 +114,7 @@ public class main {
 			       			(int)coresExplicit.get(2).tasks.get(0).period, coresExplicit.get(2).tasks.get(0).runnables.get(8).BCST, coresExplicit.get(2).tasks.get(0).runnables.get(8).WCRT,
 			       			coresExplicit.get(2).tasks.get(0).responseTime);
 			      	
-			
+			/*
 			System.out.println("EXPLICIT EC1");
 			System.out.println(coresExplicit.get(2).tasks.get(4).runnables.get(7).name +
 					"; Period: "+(int)coresExplicit.get(2).tasks.get(4).period +" | BCST: "+coresExplicit.get(2).tasks.get(4).runnables.get(7).BCST +" | WCRT: "+coresExplicit.get(2).tasks.get(4).runnables.get(7).WCRT);
@@ -142,7 +142,7 @@ public class main {
 			System.out.println(coresImplicit.get(2).tasks.get(0).runnables.get(10).name +
 					"; Period: "+(int)coresImplicit.get(2).tasks.get(0).period +" | BCST1_0: "+coresImplicit.get(2).tasks.get(0).runnables.getFirst().BCST +" | WCRT1_0: "+coresImplicit.get(2).tasks.get(0).runnables.getFirst().WCRT
 					+" | BCST1_last: "+ coresImplicit.get(2).tasks.get(0).runnables.getLast().BCST+ " | WCRT1_last: "+coresImplicit.get(2).tasks.get(0).runnables.getLast().WCRT);
-			
+			*/
 			
 			ImplicitCommunication MCOP = new ImplicitCommunication(
 			       			(int)coresImplicit.get(2).tasks.get(4).period, coresImplicit.get(2).tasks.get(4).runnables.getFirst().WCRT, coresImplicit.get(2).tasks.get(4).runnables.getLast().BCST, coresImplicit.get(2).tasks.get(4).runnables.getLast().WCRT,
@@ -155,10 +155,7 @@ public class main {
 					 (int)coresImplicit.get(3).tasks.get(3).period,
 					 (int)coresImplicit.get(2).tasks.get(0).period);
 			 
-             //ExplicitCommunication E2E = new ExplicitCommunication(800,9.844000928,24.272001184000004,2000,3.896001524,39.668002,50000,795.6880232479997,16354.920024780005,16981.936030792007);
-             //ExplicitCommunication E2E = new ExplicitCommunication(800,11.210000986666667,20.22666765333333,2000,11.55000166666667,33.056668333333334,50000,677.3266867,12469.11002065,16935.212000000007);
-             //ImplicitCommunication MCOP = new ImplicitCommunication(800,0,159.392,9.844,24.272,2000,0,266.468,101.028,323.2680000000001,50000,0, 13122.360000000004,1034.2160000000001,16981.936000000005);
-
+         
           	  System.out.println("EXPLICIT");
              E2E.L2FCalculation();
              E2E.L2LCalculation();
@@ -189,11 +186,11 @@ public class main {
 
 	   		//public ExplicitCommunication (int Task1 , double BCST1, double WCRT1, int Task2 , double BCST2, double WCRT2, int Task3 , double BCST3, double WCRT3, double WCRTTask3) {
 			ExplicitCommunication E2E = new ExplicitCommunication(
-			       			(int)coresExplicit.get(0).tasks.get(0).period, coresExplicit.get(0).tasks.get(0).runnables.get(3).BCST, coresExplicit.get(0).tasks.get(0).runnables.get(3).WCRT,
+						    799, coresExplicit.get(0).tasks.get(0).runnables.get(3).BCST, coresExplicit.get(0).tasks.get(0).runnables.get(3).WCRT,
 			       			(int)coresExplicit.get(2).tasks.get(0).period, coresExplicit.get(2).tasks.get(0).runnables.get(3).BCST, coresExplicit.get(2).tasks.get(0).runnables.get(3).WCRT,
 			       			(int)coresExplicit.get(2).tasks.get(3).period, coresExplicit.get(2).tasks.get(3).runnables.get(36).BCST, coresExplicit.get(2).tasks.get(3).runnables.get(36).WCRT,
 			       			coresExplicit.get(2).tasks.get(3).responseTime);
-			
+			/*
 			System.out.println("EXPLICIT EC2");
 			System.out.println(coresExplicit.get(0).tasks.get(0).runnables.get(3).name +
 					"; Period: "+(int)coresExplicit.get(0).tasks.get(0).period +" | BCST: "+coresExplicit.get(0).tasks.get(0).runnables.get(3).BCST +" | WCRT: "+coresExplicit.get(0).tasks.get(0).runnables.get(3).WCRT);
@@ -202,7 +199,7 @@ public class main {
 					"; Period: "+(int)coresExplicit.get(2).tasks.get(0).period +" | BCST: "+coresExplicit.get(2).tasks.get(0).runnables.get(3).BCST +" | WCRT: "+coresExplicit.get(2).tasks.get(0).runnables.get(3).WCRT);
 			
 			System.out.println(coresExplicit.get(2).tasks.get(3).runnables.get(36).name +
-					"; Period: "+(int)coresExplicit.get(2).tasks.get(3).period +" | BCST: "+coresExplicit.get(2).tasks.get(3).runnables.get(36) +" | WCRT: "+coresExplicit.get(2).tasks.get(3).runnables.get(36).WCRT+
+					"; Period: "+(int)coresExplicit.get(2).tasks.get(3).period +" | BCST: "+coresExplicit.get(2).tasks.get(3).runnables.get(36).BCST +" | WCRT: "+coresExplicit.get(2).tasks.get(3).runnables.get(36).WCRT+
 					" RT TASK: "+coresExplicit.get(2).tasks.get(3).responseTime);
 			
 
@@ -220,19 +217,19 @@ public class main {
 			System.out.println(coresImplicit.get(2).tasks.get(3).runnables.get(37).name +
 					"; Period: "+(int)coresImplicit.get(2).tasks.get(3).period +" | BCST1_0: "+coresImplicit.get(2).tasks.get(3).runnables.getFirst().BCST +" | WCRT1_0: "+coresImplicit.get(2).tasks.get(3).runnables.getFirst().WCRT
 					+" | BCST1_last: "+ coresImplicit.get(2).tasks.get(3).runnables.getLast().BCST+ " | WCRT1_last: "+coresImplicit.get(2).tasks.get(3).runnables.getLast().WCRT);
-			
+			*/
 			
 
 			//public ImplicitCommunication (int Task1 , double BCST1_0, double WCRT1_0, double BCST1_last, double WCRT1_last, 
 			//		int Task2 , double BCST2_0, double WCRT2_0, double BCST2_last, double WCRT2_last, 
 			//		int Task3 , double BCST3_0, double WCRT3_0, double BCST3_last, double WCRT3_last) {
 			ImplicitCommunication MCOP = new ImplicitCommunication(
-			       			(int)coresImplicit.get(0).tasks.get(0).period, coresImplicit.get(0).tasks.get(0).runnables.getFirst().WCRT, coresImplicit.get(0).tasks.get(0).runnables.getLast().BCST, coresImplicit.get(0).tasks.get(0).runnables.getLast().WCRT,
+						    799, coresImplicit.get(0).tasks.get(0).runnables.getFirst().WCRT, coresImplicit.get(0).tasks.get(0).runnables.getLast().BCST, coresImplicit.get(0).tasks.get(0).runnables.getLast().WCRT,
 			       			(int)coresImplicit.get(2).tasks.get(0).period, coresImplicit.get(2).tasks.get(0).runnables.getFirst().WCRT, coresImplicit.get(2).tasks.get(0).runnables.getLast().BCST, coresImplicit.get(2).tasks.get(0).runnables.getLast().WCRT,
 			       			(int)coresImplicit.get(2).tasks.get(3).period, coresImplicit.get(2).tasks.get(3).runnables.getFirst().WCRT, coresImplicit.get(2).tasks.get(3).runnables.getLast().BCST, coresImplicit.get(2).tasks.get(3).runnables.getLast().WCRT
 			       			);
    	   
-			 LETCommunication LET = new LETCommunication((int)coresImplicit.get(0).tasks.get(0).period,
+			 LETCommunication LET = new LETCommunication(799,
 					 (int)coresImplicit.get(2).tasks.get(0).period,
 					 (int)coresImplicit.get(2).tasks.get(3).period);
              //ExplicitCommunication E2E = new ExplicitCommunication(800,9.844000928,24.272001184000004,2000,3.896001524,39.668002,50000,795.6880232479997,16354.920024780005,16981.936030792007);
