@@ -1,29 +1,29 @@
 package waters_2017;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
 
 public class LETCommunication {
+	//int ECHyperperiod = 1;
+	//int LargestPeriod = 0;
+	//int Zeta = 0;
+	//ArrayList<Integer> PointList = new ArrayList<>();
 	
-	private int Task_1 = 0;
-	private int Task_2 = 0;
-	private int Task_3 = 0;
+	ArrayList<Integer> TaskList = new ArrayList<Integer>();
+	//private int Task_1 = 0;
+	//private int Task_2 = 0;
+	//private int Task_3 = 0;
 	
-	// Tasks are given in us!!!
-	// Effect-chain Task1 --> Task2 --> Task3
-	public LETCommunication (int Task1, int Task2, int Task3) {
-		Task_1 = Task1;
-		Task_2 = Task2;
-		Task_3 = Task3;
-		
+	
+	public LETCommunication(ArrayList<Integer> Input) {
+		TaskList = Input;
 	}
-	
-	public LETCommunication (int Task1, int Task2) {
-		Task_1 = Task1;
-		Task_2 = Task2;
-		
-	}
+
 	
 	// n-th publishing point
 	int Ppoint (int Task_W, int Task_R, int n) throws IOException {
@@ -38,32 +38,15 @@ public class LETCommunication {
 		int Q = (int)Math.ceil(((double)(n*Task_max))/((double)Task_R))*Task_R;
 		return Q;
 	}
-	
-	// new calculation
+
+	// n-th window 
 	int nth_Window (int Task_W, int Task_R, int n) throws IOException{
 		int w = 0;
 		w = Qpoint(Task_W,Task_R,n) - Ppoint(Task_W,Task_R,n);
 		return w;
 	}
 	
-	//old calculation
-	/*int nth_Window (int Task_W, int Task_R, int n) throws IOException{
-		int w = 0;
-		int Task_max = Math.max(Task_W, Task_R);
-		int Task_min = Math.min(Task_W, Task_R);
-		int t1 = n*Task_max;
-		double t2 = ((double)t1)/((double)Task_min) ;
-
-		if (Task_W == Task_max){
-			w = (int)Math.ceil(t2)*Task_min - t1;
-		}
-		
-		else {
-			w = t1 - (int)Math.floor(t2)*Task_min;
-		}
-		return w;
-	}*/
-	
+	// Hyperperiod of two given tasks
 	int Hyperperiod (int Task_A, int Task_B) throws IOException{
 		int x = 0;
 		int Hyperperiod = 1;
@@ -84,16 +67,42 @@ public class LETCommunication {
 		return Hyperperiod;
 	}
 	
-	int n_WR (int Task_A,int Task_B) throws IOException{
-		int nWR = 0;
-		nWR = Hyperperiod(Task_A, Task_B)/Math.max(Task_A, Task_B);
-		return nWR;
-	}
-	
-	int ECHyperperiod (int Task_A, int Task_B, int Task_C) throws IOException{
-		int ECHyperperiod = Hyperperiod (Task_C, Hyperperiod (Task_A, Task_B));
+	// Hyperperiod of the EC
+	int ECHyperperiod () throws IOException{
+		int ECHyperperiod = 1;
+		int i;
+		for (i=0;i<TaskList.size();i++){
+			ECHyperperiod = Hyperperiod(ECHyperperiod, TaskList.get(i));
+		}
+		//int ECHyperperiod = Hyperperiod (Task_C, Hyperperiod (Task_A, Task_B));
 		return ECHyperperiod;
 	}
+
+	int LargestPeriodInEC () throws IOException{
+		int LargestPeriod = 0;
+		int i;
+		for (i=0;i<TaskList.size();i++){
+			LargestPeriod = Math.max(LargestPeriod, TaskList.get(i));
+		}
+		return LargestPeriod;
+	}
+	
+	// Calculating \zeta
+	int BasicPathNumber() throws IOException{
+		int H = ECHyperperiod();
+		int L = LargestPeriodInEC();
+		int Zeta = H/L;
+		return Zeta;
+	}
+	
+	// Calculating n_{W,R}^{EC}
+	int n_WR (int Task_A,int Task_B) throws IOException{
+	int H = ECHyperperiod();
+	int nWR = H/Math.max(Task_A, Task_B);
+	return nWR;
+	}
+	
+
 	
 	String CommunicationType (int Task_A, int Task_B) throws IOException {
 		String ComType = "";
@@ -106,156 +115,297 @@ public class LETCommunication {
 		return ComType;
 	}
 	
-	// Calculating \zeta
-	int BasicPathNumber() throws IOException{
-		int zeta = 0;
-		int LongestPeriod =Math.max(Task_1, Math.max(Task_2, Task_3));
-		//System.out.println(Task_1 + "ms -->" + Task_2 + "ms -->" + Task_3 + "ms");
-		//System.out.println("The hyperperiod of the EC is : " + ECHyperperiod(Task_1, Task_2, Task_3));
-		zeta = ECHyperperiod(Task_1, Task_2, Task_3)/LongestPeriod;
-		//System.out.println("Number of bacis paths : " + zeta);
-		return zeta;
-	}
-	
-	
-	
-	// Calculating n_{W,R}^{EC}
-	int n_EC_WR(int Task_W, int Task_R) throws IOException{
-		int NECWR = ECHyperperiod(Task_1, Task_2, Task_3)/Math.max(Task_W, Task_R);
-		//System.out.println(Task_W + "ms and " + Task_R +"ms establish " + CommunicationType(Task_W, Task_R));
-		//System.out.println("Number of jobs released by " + Math.max(Task_W, Task_R) + " ms in a EC-hyperperiod : " + NECWR);
-		return NECWR;
-	}
-	
-
 	
 	//public ArrayList<Integer> Algorithm1 () throws IOException{
-	ArrayList<Integer> Algorithm1 () throws IOException{
-		ArrayList<Integer> PointList = new ArrayList<>();
-		int z = BasicPathNumber();
-		int Q=0;
-		int P=0;
-		int NECIJ = n_EC_WR(Task_1, Task_2);
-		int NECJK = n_EC_WR(Task_2, Task_3);
-		int w_IJ = 0;
-		int w_JK = 0;
-		int d=0;
+
+	void PQPrinter() throws IOException{
+		FileWriter write = new FileWriter("C:/Users/LPC/Desktop/points.txt" , true);
+		PrintWriter printBuffer = new PrintWriter(write);
+		//printBuffer.println();
 		
-		if (z == NECIJ){
-			//System.out.println(" we are here ");
-			//int n=1;
-			for (int n=1; n <= z; n++){
-				int m=1;
-				for(m=1;m <= NECJK; m++ ){
-					P = Ppoint(Task_2,Task_3,m);
-					Q = Qpoint(Task_1, Task_2, (n-1));
-					d = P- Q;
-					//System.out.println(n + " : " + m + " : " + Q + " " + P + " " + d);
-					if (d >0) {
-						//System.out.println(" we broke ");
-						break;	
-					}
-				}
-				w_IJ = nth_Window(Task_1, Task_2, n-1);
-				w_JK = nth_Window(Task_2, Task_3, m);
-				PointList.add(w_IJ);
-				PointList.add(n-1);
-				PointList.add(Q);
-				PointList.add(m);
-				PointList.add(P);
-				PointList.add(w_JK);
-				
+		int NumberOfTasks = TaskList.size();
+		/*int h;
+		for (h=1;h<=NumberOfTasks;h++){
+			//String ListName = "PList" + Integer.toString(h);
+			ArrayList<Integer> Integer.toString(h) = new ArrayList<>();
+		}*/
+		//ArrayList<Integer> PList = new ArrayList<>();
+		int i,n,NWR_1,NWR_2;
+		int NWR_01 =  n_WR (TaskList.get(0),TaskList.get(1))*2; 
+		// Task_0 --> Task_1
+		for(n=0;n <= NWR_01;n++){
+			System.out.print(Ppoint(TaskList.get(0), TaskList.get(1), n) + " ");
+			printBuffer.print(Ppoint(TaskList.get(0), TaskList.get(1), n) + " ");
+		}
+		System.out.println();
+		printBuffer.println();
+		for (i=1;i<NumberOfTasks-1;i++){
+			// Task_i-- --> Task_i
+			NWR_1 =  n_WR (TaskList.get(i-1),TaskList.get(i))*2; 
+			for(n=0;n <= NWR_1;n++){
+				System.out.print(Qpoint(TaskList.get(i-1), TaskList.get(i), n)+ " ");
+				printBuffer.print(Qpoint(TaskList.get(i-1), TaskList.get(i), n)+ " ");
 			}
+			System.out.println();
+			printBuffer.println();
+			// Task_i --> Task_i++
+			NWR_2 =  n_WR (TaskList.get(i),TaskList.get(i+1))*2; 
+			for(n=0;n <= NWR_2;n++){
+				System.out.print(Ppoint(TaskList.get(i), TaskList.get(i+1), n)+ " ");
+				printBuffer.print(Ppoint(TaskList.get(i), TaskList.get(i+1), n)+ " ");
+			}
+			System.out.println();
+			printBuffer.println();
 		}
 		
-		else {
-			//System.out.println(" we are there ");
-			for (int n=1; n <= z; n++){
-				//int Pre_m = 0;
-				int Pre_Qpoint = 0;
-				int m=0;
-				for(m=0;m <= NECIJ; m++ ){
-					P = Ppoint(Task_2,Task_3,n);
-					Q = Qpoint(Task_1, Task_2, m);
-					
-					//System.out.println(n + " : " + m + " : " + Q + " " + P + " " + d);
-					d = P - Q;
-					if (d <= 0) {
-						//System.out.println(" we broke ");
-						Pre_Qpoint = Qpoint(Task_1, Task_2, m-1);
-						break;	
-					}
+		// Task_i-- --> Task_i
+		int NWR_i =  n_WR (TaskList.get(NumberOfTasks-2),TaskList.get(NumberOfTasks-1))*2; 
+		// Task_0 --> Task_1
+		for(n=0;n <= NWR_i;n++){
+			System.out.print(Qpoint(TaskList.get(NumberOfTasks-2), TaskList.get(NumberOfTasks-1), n)+ " ");
+			printBuffer.print(Qpoint(TaskList.get(NumberOfTasks-2), TaskList.get(NumberOfTasks-1), n)+ " ");
+		}
+		System.out.println();
+		printBuffer.println();
+		printBuffer.close();	
+	}
+	
+	//Get the number of lines of the input
+	int readLines(String file_input) throws IOException{
+		FileReader file_to_read = new FileReader(file_input);
+		BufferedReader bf = new BufferedReader(file_to_read);
+		String aLine;
+		int numberOfLines = 0;
+		 
+		 while((aLine = bf.readLine()) != null){
+			 numberOfLines++;
+		 }
+		 bf.close();
+		 return numberOfLines;
+	}
+	
+	String QPFinder(String Q_point, String P_point_Array) throws IOException{
+		String PPointArray [] = P_point_Array.trim().split("\\s+");
+		String PPoint = "";
+		int i, d;
+		for(i=0;i<PPointArray.length;i++){
+			d = Integer.parseInt(Q_point) - Integer.parseInt(PPointArray[i]);
+			if (d <0){
+				PPoint = PPointArray[i-1];
+				break;
+			}
+		}
+		return PPoint;
+	}
+	
+	
+	String PQFinder(String P_point, String Q_point_Array) throws IOException{
+		String QPointArray [] = Q_point_Array.trim().split("\\s+");
+		String QPoint = "";
+		int i, d;
+		for(i=0;i<QPointArray.length;i++){
+			d = Integer.parseInt(P_point) - Integer.parseInt(QPointArray[i]);
+			if (d <= 0){
+				if(i !=0) QPoint = QPointArray[i-1];
+				break;
+			}
+		}
+		return QPoint;
+	}
+	
+	String QP_PQFinder (String Q_point, String P_Point_Array, String Q_Point_Array) throws IOException {
+		String Q_point_output = "";
+		String P_temp = QPFinder(Q_point,P_Point_Array);
+		if (P_temp.equals("")){
+			// do nothing
+		}
+		else{
+			Q_point_output = PQFinder(P_temp, Q_Point_Array);	
+		}
+		
+		//if (P_temp.equals("0")) continue;
+		return Q_point_output;
+	}
+	
+	 ArrayList<Integer> PathCalculation() throws IOException{
+		PQPrinter();
+		ArrayList<Integer> PointList = new ArrayList<Integer>();
+		FileReader fr =  new FileReader("C:/Users/LPC/Desktop/points.txt");
+		BufferedReader textReader = new BufferedReader(fr);
+		int numberOfArrays = readLines("C:/Users/LPC/Desktop/points.txt"); 
+		int Skipcounter  = 0; // times the chain was not over
+		//System.out.println(numberOfLines);
+		String[] PQArray = new String[numberOfArrays];
+		//each element of PQArray contains one line 
+		int i,j, breakflag=0;
+		for (i=0;i < numberOfArrays;i++){
+			PQArray[i] = textReader.readLine();
+		}
+		
+		String QPointArray [] = PQArray[numberOfArrays-1].trim().split("\\s+");
+		// Till the last element in the HEC
+		int HECBound = (QPointArray.length/2)+1;
+		for (i=1;i < HECBound ;i++){
+			//System.out.print(QPointArray [i] + ";");
+			int Q  = Integer.parseInt(QPointArray [i]);
+			String Q_temp = QPointArray [i];
+			for(j=numberOfArrays;j>3;j=j-2){
+				Q_temp = QP_PQFinder(Q_temp,PQArray[j-2],PQArray[j-3]);
+				if (Q_temp.equals("")){
+					breakflag =1;
+					break;
 				}
-				w_IJ = nth_Window(Task_1, Task_2, m-1);
-				w_JK = nth_Window(Task_2, Task_3, n);
-				PointList.add(w_IJ);
-				PointList.add(m-1);
-				PointList.add(Pre_Qpoint);
-				PointList.add(n);
-				PointList.add(P);
-				PointList.add(w_JK);
-				
-				
+			}
+			if (breakflag == 1){
+				breakflag = 0;
+				Skipcounter ++;
+				continue;
+			}
+			int P = Integer.parseInt(QPFinder(Q_temp,PQArray[0]));
+			PointList.add(P);
+			PointList.add(Q);
+			//System.out.println(P + ";" + Q);
+		}
+		
+		//accounting for the number of unfinished paths 
+		int NewBound = (QPointArray.length/2)+1 +Skipcounter;
+		for (i=HECBound;i < NewBound  ;i++){
+			//System.out.print(QPointArray [i] + ";");
+			int Q  = Integer.parseInt(QPointArray [i]);
+			String Q_temp = QPointArray [i];
+			for(j=numberOfArrays;j>3;j=j-2){
+				Q_temp = QP_PQFinder(Q_temp,PQArray[j-2],PQArray[j-3]);
+			}
+			
+			int P = Integer.parseInt(QPFinder(Q_temp,PQArray[0]));
+			PointList.add(P);
+			PointList.add(Q);
+			//System.out.println(P + ";" + Q);
+		}
+		
+		// printing all the points
+		/*for(i=0;i<PointList.size();i=i+2){
+			System.out.println(PointList.get(i) + ";" + PointList.get(i+1));
+		}*/
+		// getting rid of paths having the same start point
+		return PointList;
+	}
+	
+	 
+	 
+	public ArrayList<Integer> ThetaCalculation () throws IOException{
+		ArrayList<Integer> PointList = PathCalculation();
+		ArrayList<Integer> ThetaList = new ArrayList<>();
+		int i;
+		int UniqueP = PointList.get(0);
+		ThetaList.add(PointList.get(0));
+		ThetaList.add(PointList.get(1));
+		for(i=2;i<PointList.size();i=i+2){
+			if(PointList.get(i) == UniqueP){
+				// do nothing
+			}
+			else{
+				ThetaList.add(PointList.get(i));
+				ThetaList.add(PointList.get(i+1));
+				UniqueP = PointList.get(i);
 			}
 			
 		}
-		return PointList;
-		//System.out.println(PointList);
-		
-
-
-		//return PointList;
-		//BasicPathNumber ();
-		//n_EC_WR(Task_1,Task_2);
-		//n_EC_WR(Task_2,Task_3);
-		/*int i=0;
-		for (i=0;i<= 10;i++){
-			Ppoint (Task_1,Task_2,i);
-			Qpoint (Task_1, Task_2,i);
-		}*/
-
-		//ECHyperperiod(Task_1, Task_2, Task_3);
-	}
-	
-	ArrayList<Integer> ThetaCalculation () throws IOException{
-		ArrayList<Integer> InputList = Algorithm1();
-		ArrayList<Integer> ThetaList = new ArrayList<>();
-		int theta = 0;
-		int pathCounter = 0;
-		for(int k=0;k<InputList.size();k=k+6){
-			pathCounter ++;
-			theta = InputList.get(k) - InputList.get(k+2)+ InputList.get(k+4)+ InputList.get(k+5);
-			ThetaList.add(theta);
-			//System.out.println("length of path " + pathCounter + " : " + theta);
+		// printing all the points
+		System.out.println("The following points denote the start and end of our paths");
+		for(i=0;i<ThetaList.size();i=i+2){
+			System.out.println(ThetaList.get(i) + ";" + ThetaList.get(i+1));
 		}
-		
 		return ThetaList ;
 	}
 
-	public int L2FCalculation () throws IOException {
-		System.out.println(Task_1 + "us and " + Task_2 +"us establish " + CommunicationType(Task_1, Task_2));
-		System.out.println(Task_2 + "us and " + Task_3 +"us establish " + CommunicationType(Task_2, Task_3));
-		System.out.println("The hyperperiod of the EC : " + Task_1 + "us -->" + Task_2 + "us -->" + Task_3 + "us is : " + ECHyperperiod(Task_1, Task_2, Task_3));
-		System.out.println("Number of bacis paths : " + BasicPathNumber());
-		
-		ArrayList<Integer> Thetas = ThetaCalculation();
-		int L2FDelay = 0;
-		int i=0;
-		int max =Thetas.get(0);
-		// Calculating max{Theta_EC^n}
-		for (i=1;i<Thetas.size();i++){
-			max=Math.max(Thetas.get(i), max);
+	
+	public int DeltaCalculation (ArrayList<Integer> ThetaListArray) throws IOException {
+		int Delta = 0;
+		int max_path_length = 0;
+		ArrayList<Integer> ThetaList = ThetaListArray;
+		int i, theta;
+		for(i=0;i<ThetaList.size();i=i+2){
+			theta = ThetaList.get(i+1) - ThetaList.get(i);
+			max_path_length = Math.max(theta, max_path_length);
 		}
-		L2FDelay = Task_1 + max + Task_3;
-		System.out.println("The last-2-first propagation delay of the EC is : " + L2FDelay );
-		System.out.println("--------------------------------------------------------------------------------------------------------------------");
-		return L2FDelay;
+		Delta = TaskList.get(0) + max_path_length +TaskList.get(TaskList.size()-1);
+		//System.out.println(max_path_length + ";" + Delta);
+		System.out.println("The end-2-end propagation delay is :" + Delta);
+		return Delta;
 	}
 	
-	public int L2LCalculation () throws IOException {
-		System.out.println(Task_1 + "ms and " + Task_2 +"us establish " + CommunicationType(Task_1, Task_2));
-		System.out.println(Task_2 + "ms and " + Task_3 +"us establish " + CommunicationType(Task_2, Task_3));
-		System.out.println("The hyperperiod of the EC : " + Task_1 + "us -->" + Task_2 + "us -->" + Task_3 + "us is : " + ECHyperperiod(Task_1, Task_2, Task_3));
+	public int AlphaCalculation (ArrayList<Integer> ThetaListArray) throws IOException {
+		int Alpha = 0;
+		int max_path_length = 0;
+		ArrayList<Integer> ThetaList = ThetaListArray;
+		int i, theta, temp;
+		for(i=0;i<ThetaList.size();i=i+2){
+			theta = ThetaList.get(i+1) - ThetaList.get(i);
+			if (i==ThetaList.size()-2){
+				temp = theta + ThetaList.get(1) + ECHyperperiod () - ThetaList.get(i+1);
+				System.out.println("Just Debugging : " + ThetaList.get(1) + ";" + ECHyperperiod () + ";" + ThetaList.get(i+1));
+			}
+			else{
+				temp = theta + ThetaList.get(i+3) - ThetaList.get(i+1);
+			}
+			max_path_length = Math.max(temp, max_path_length);
+		}
+		Alpha = TaskList.get(0) + max_path_length;
+		//System.out.println(max_path_length + ";" + Alpha);
+		System.out.println("The end-2-end age latency is :" + Alpha);
+		return Alpha;
+	}
+	
+	public int RhoCalculation (ArrayList<Integer> ThetaListArray) throws IOException {
+		int Rho = 0;
+		int max_path_length = 0;
+		ArrayList<Integer> ThetaList = ThetaListArray;
+		int i, theta, temp;
+		for(i=0;i<ThetaList.size();i=i+2){
+			theta = ThetaList.get(i+1) - ThetaList.get(i);
+			if (i==ThetaList.size()-2){
+				temp = theta + ThetaList.get(1) + ECHyperperiod () - ThetaList.get(i+1);
+				//System.out.println("Just Debugging : " + ThetaList.get(1) + ";" + ECHyperperiod () + ";" + ThetaList.get(i+1));
+			}
+			else{
+				temp = theta + ThetaList.get(i+3) - ThetaList.get(i+1);
+			}
+			max_path_length = Math.max(temp, max_path_length);
+		}
+		Rho = TaskList.get(0) + max_path_length + TaskList.get(TaskList.size()-1);
+		//System.out.println(max_path_length + ";" + Alpha);
+		System.out.println("The end-2-end reaction latency is :" + Rho);
+		return Rho;
+	}
+	
+	/*public ArrayList<Integer> AlgorithmTest () throws IOException {
+		ArrayList<Integer> Buffer = new ArrayList<>();
+		ArrayList<Integer> Buffer_Points = new ArrayList<>();
+		int i;
+		for(i=0;i<TaskList.size()-2;i++){
+			//System.out.print("We are here!!!!");
+			System.out.println(TaskList.get(i) + ";" +TaskList.get(i+1) +";"+ TaskList.get(i+2));
+			System.out.println("n; Q_ij; Q_jk");
+			Buffer = Algorithm1(TaskList.get(i),TaskList.get(i+1),TaskList.get(i+2));			// <-- This works only for 3 Tasks
+			int j;
+			for(j=0;j<Buffer.size();j++){
+				Buffer_Points.add(Buffer.get(j));
+			}
+		}
+		
+		for(i=0;i<Buffer_Points.size();i++){
+			//System.out.print("We are here!!!!");
+			System.out.print(Buffer_Points.get(i) + ";");			
+		}
+		return Buffer_Points;
+	}*/
+	
+	
+	/*public int L2LCalculation () throws IOException {
+		System.out.println(Task_1 + "ms and " + Task_2 +"ms establish " + CommunicationType(Task_1, Task_2));
+		System.out.println(Task_2 + "ms and " + Task_3 +"ms establish " + CommunicationType(Task_2, Task_3));
+		System.out.println("The hyperperiod of the EC : " + Task_1 + "ms -->" + Task_2 + "ms -->" + Task_3 + "ms is : " + ECHyperperiod(Task_1, Task_2, Task_3));
 		System.out.println("Number of bacis paths : " + BasicPathNumber());
 		// we are interested in the last three elements of the tuple
 		ArrayList<Integer> List1 = Algorithm1();
@@ -270,7 +420,7 @@ public class LETCommunication {
 		int L2L = 0;
 		int maxL2L = 0;
 		int Theta = 0;
-		System.out.println("Theta, Q_(n+1), Q_n, L2L");
+		System.out.println("Theta, Q_n, Q_(n+1), L2L");
 		for(int k=0;k<List1.size();k=k+6){
 	
 			n = List1.get(k + 3);
@@ -301,103 +451,8 @@ public class LETCommunication {
 		System.out.println("--------------------------------------------------------------------------------------------------------------------");
 		return maxL2L;
 		
-	}
-	
-	public int F2FCalculation () throws IOException {
-		System.out.println(Task_1 + "ms and " + Task_2 +"us establish " + CommunicationType(Task_1, Task_2));
-		System.out.println(Task_2 + "ms and " + Task_3 +"us establish " + CommunicationType(Task_2, Task_3));
-		System.out.println("The hyperperiod of the EC : " + Task_1 + "us -->" + Task_2 + "us -->" + Task_3 + "ms is : " + ECHyperperiod(Task_1, Task_2, Task_3));
-		System.out.println("Number of bacis paths : " + BasicPathNumber());
-		// we are interested in the last three elements of the tuple
-		ArrayList<Integer> List1 = Algorithm1();
-		ArrayList<Integer> List2 = ThetaCalculation();
-		int n = 0;
-		int P_JK_0 = 0;
-		int w_JK_0 = 0;
-		int P_JK_1 = 0;
-		int w_JK_1 = 0;
-		int Q_JK_0 = 0;
-		int Q_JK_1 = 0;
-		int F2F = 0;
-		int maxF2F = 0;
-		int Theta = 0;
-		//System.out.println("Theta, Q_(n+1), Q_n, F2F");
-		for(int k=0;k<List1.size();k=k+6){
-	
-			n = List1.get(k + 3);
-			P_JK_0 = List1.get(k + 4);
-			w_JK_0 = List1.get(k + 5);
-			
-			if (k == ((List1.size()/6)-1)*6  ){
-			P_JK_1 = List1.get(4) + ECHyperperiod(Task_1, Task_2, Task_3);
-			w_JK_1 = List1.get(5);
-			}
-			
-			else {
-				P_JK_1 = List1.get(k + 10);
-				w_JK_1 = List1.get(k + 11);
-			}
-				
-			Q_JK_0 = P_JK_0 + w_JK_0;
-			Q_JK_1 = P_JK_1 + w_JK_1;
-			F2F = Q_JK_1 - Q_JK_0 + List2.get(Theta) + Task_1 + Task_3;
-
-			//System.out.println(List2.get(Theta) + ", " + Q_JK_0 +", " +  Q_JK_1 + ", " +  F2F);
-			maxF2F=Math.max(F2F, maxF2F);
-			Theta ++;
-		}
-		
-		//maxL2L = maxL2L;
-		System.out.println("The first-2-first propagation delay of the EC is : " + maxF2F  );
-		System.out.println("--------------------------------------------------------------------------------------------------------------------");
-		return maxF2F;
-	}
-	
-	/*public int F2FCalculation () throws IOException {
-		System.out.println(Task_1 + "ms and " + Task_2 +"ms establish " + CommunicationType(Task_1, Task_2));
-		System.out.println(Task_2 + "ms and " + Task_3 +"ms establish " + CommunicationType(Task_2, Task_3));
-		System.out.println("The hyperperiod of the EC : " + Task_1 + "ms -->" + Task_2 + "ms -->" + Task_3 + "ms is : " + ECHyperperiod(Task_1, Task_2, Task_3));
-		System.out.println("Number of bacis paths : " + BasicPathNumber());
-		// we are interested in the last three elements of the tuple
-		ArrayList<Integer> List1 = Algorithm1();
-		ArrayList<Integer> List2 = ThetaCalculation();
-		int n = 0;
-		int Q_IJ_0 = 0;
-		int w_IJ_0 = 0;
-		int P_IJ_0 = 0;
-		int Q_IJ_pre = 0;
-		int w_IJ_pre = 0;
-		int P_IJ_pre = 0;
-		int F2F = 0;
-		int maxF2F = 0;
-		int Theta = 0;
-		for(int k=0;k<List1.size();k=k+6){
-			//w,n,q
-			w_IJ_0 = List1.get(k);
-			n = List1.get(k + 1);
-			Q_IJ_0= List1.get(k + 2);
-			
-			if (k == 0 ){
-			w_IJ_pre = List1.get (((List1.size()/6)-1)*6);
-			Q_IJ_pre = List1.get(((List1.size()/6)-1)*6 + 2) - ECHyperperiod(Task_1, Task_2, Task_3);
-			}
-			
-			else {
-				w_IJ_pre = List1.get(k -6);
-				Q_IJ_pre = List1.get(k -4);
-			}
-				
-			P_IJ_0 = Q_IJ_0 - w_IJ_0;
-			P_IJ_pre = Q_IJ_pre - w_IJ_pre;
-			F2F = P_IJ_0 - P_IJ_pre + List2.get(Theta);
-			System.out.println(P_IJ_pre +", " +  P_IJ_0 + ", " + List2.get(Theta) + ", " + F2F);
-			maxF2F=Math.max(F2F, maxF2F);
-			Theta ++;
-		}
-		
-		maxF2F = maxF2F + Task_3;
-		System.out.println("The first-2-first propagation delay of the EC is : " + maxF2F  );
-		return maxF2F;
 	}*/
 	
+	
 }
+

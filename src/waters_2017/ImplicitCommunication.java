@@ -73,9 +73,8 @@ private double WCRT_Task_3 = 0;
 	}*/
 	 
 	public double DeltaCalculation (int Task_W, double BCST_W_last, double WCRT_Task_W, int Task_R, double WCRT_R_0, double WCRT_Task_R) throws IOException {
-		double phi_W = PhiCalculation(Task_W, BCST_W_last, WCRT_Task_W); 
 		double phi_R = PhiCalculation(Task_R, 0, WCRT_R_0);
-		double delta = Math.min(phi_R, phi_W) + DeltaImplicit(WCRT_Task_R, WCRT_R_0);
+		double delta = phi_R + DeltaImplicit(WCRT_Task_R, WCRT_R_0);
 		//System.out.println(delta);
 		return delta;
 	}
@@ -84,16 +83,9 @@ private double WCRT_Task_3 = 0;
 		double alpha = 0;
 		double phi_W = PhiCalculation(Task_W, BCST_W_last, WCRT_Task_W); 
 		//System.out.println(phi_W);
-		double phi_R = PhiCalculation(Task_R, 0, WCRT_R_0);
+		//double phi_R = PhiCalculation(Task_R, 0, WCRT_R_0);
 		//System.out.println(phi_R);
-		
-		double q = phi_W - phi_R;
-		if (q>0){
-			alpha = Math.max(Task_W, phi_R + Math.floor(q/((double)Task_R))*Task_R) + DeltaImplicit(WCRT_Task_R, WCRT_R_0);
-		}
-		else {
-			alpha = phi_W + DeltaImplicit(WCRT_Task_R, WCRT_R_0);
-		}
+		alpha = phi_W + DeltaImplicit(WCRT_Task_R, WCRT_R_0);
 		return alpha;
 	}
 	
@@ -112,7 +104,7 @@ private double WCRT_Task_3 = 0;
 		return alpha;
 	}*/
 	
-	public double RhoCalculation (int Task_W, double BCST_W_last, double WCRT_Task_W, int Task_R, double WCRT_R_0, double WCRT_Task_R) throws IOException {
+	/*public double RhoCalculation (int Task_W, double BCST_W_last, double WCRT_Task_W, int Task_R, double WCRT_R_0, double WCRT_Task_R) throws IOException {
 		double rho = 0;
 		double phi_W = PhiCalculation(Task_W, BCST_W_last, WCRT_Task_W); 
 		//System.out.println(phi_W);
@@ -131,41 +123,26 @@ private double WCRT_Task_3 = 0;
 		//double alpha = delta + Math.floor(max/Task_R)*Task_R;
 		//System.out.println(rho);
 		return rho;
-	}
+	}*/
 	
 	
 	// Task_W, BCST_W_last, WCRT_Task_W, Task_R, WCRT_R_0, WCRT_Task_R
 	//BCST_1_last +
-	public void L2FCalculation () throws IOException {
+	/*public void L2FCalculation () throws IOException {
 		double L2F = BCST_1_last + DeltaCalculation (Task_1, BCST_1_last, WCRT_Task_1, Task_2, WCRT_2_0, WCRT_Task_2)+ DeltaCalculation (Task_2, BCST_2_last, WCRT_Task_2, Task_3, WCRT_3_0, WCRT_Task_3);
-		System.out.println("\t"+"IMPLICITO");
-
-		System.out.println("\t"+"BCST_1_last: "+BCST_1_last);
-		System.out.println("\t"+"DeltaCalculation1_2: "+DeltaCalculation (Task_1, BCST_1_last, WCRT_Task_1, Task_2, WCRT_2_0, WCRT_Task_2));
-		System.out.println("\t"+"DeltaCalculation2_3: "+DeltaCalculation (Task_2, BCST_2_last, WCRT_Task_2, Task_3, WCRT_3_0, WCRT_Task_3));
-		System.out.println("L2F: "+L2F);
-
-
-	}
+		System.out.println(L2F);
+	}*/
 	
 	public void L2LCalculation () throws IOException {
 		double L2L = BCST_1_last + AlphaCalculation (Task_1, BCST_1_last, WCRT_Task_1, Task_2, WCRT_2_0, WCRT_Task_2)+ AlphaCalculation (Task_2, BCST_2_last, WCRT_Task_2, Task_3, WCRT_3_0, WCRT_Task_3);
-		System.out.println("\t"+"BCST_1_last: "+BCST_1_last);
-		System.out.println("\t"+"AlphaCalculation1_2: "+AlphaCalculation (Task_1, BCST_1_last, WCRT_Task_1, Task_2, WCRT_2_0, WCRT_Task_2));
-		System.out.println("\t"+"AlphaCalculation2_3: "+AlphaCalculation (Task_2, BCST_2_last, WCRT_Task_2, Task_3, WCRT_3_0, WCRT_Task_3));
-
-
-		System.out.println("L2L: "+L2L);
+		//double L2L = BCST_1_0 + DeltaCalculation (Task_1,  BCST_1_0, WCRT_1_0, BCST_1_last, WCRT_1_last, Task_2,  BCST_2_0, WCRT_2_0, BCST_2_last, WCRT_2_last) + AlphaCalculation (Task_2,  BCST_2_0, WCRT_2_0, BCST_2_last, WCRT_2_last, Task_3,  BCST_3_0, WCRT_3_0, BCST_3_last, WCRT_3_last);
+		System.out.println(L2L);
 	}
 	
 	public void F2FCalculation () throws IOException {
-		double F2F =  BCST_1_last +AlphaCalculation (Task_1, BCST_1_last, WCRT_Task_1, Task_2, WCRT_2_0, WCRT_Task_2)+ RhoCalculation (Task_2, BCST_2_last, WCRT_Task_2, Task_3, WCRT_3_0, WCRT_Task_3);
+		double F2F = DeltaCalculation (0,0,0,Task_1, BCST_1_last, WCRT_Task_1)+ DeltaCalculation (Task_1, BCST_1_last, WCRT_Task_1, Task_2, WCRT_2_0, WCRT_Task_2)+ DeltaCalculation (Task_2, BCST_2_last, WCRT_Task_2, Task_3, WCRT_3_0, WCRT_Task_3);
 		//double F2F = BCST_1_0 + RhoCalculation (Task_1,  BCST_1_0, WCRT_1_0, BCST_1_last, WCRT_1_last, Task_2,  BCST_2_0, WCRT_2_0, BCST_2_last, WCRT_2_last) + DeltaCalculation (Task_2,  BCST_2_0, WCRT_2_0, BCST_2_last, WCRT_2_last, Task_3,  BCST_3_0, WCRT_3_0, BCST_3_last, WCRT_3_last);		
-		System.out.println("\t"+"BCST_1_last: "+BCST_1_last);
-		System.out.println("\t"+"AlphaCalculation1_2: "+AlphaCalculation (Task_1, BCST_1_last, WCRT_Task_1, Task_2, WCRT_2_0, WCRT_Task_2));
-		System.out.println("\t"+"RhoCalculation2_3: "+RhoCalculation (Task_2, BCST_2_last, WCRT_Task_2, Task_3, WCRT_3_0, WCRT_Task_3));
-
-		System.out.println("F2F: "+F2F);
+		System.out.println(F2F);
 	}
 	
 	

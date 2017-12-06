@@ -200,6 +200,136 @@ public class helper_communication {
 	   writer_LET.close();
 
    }
+   
+   static LinkedList<EffectChain> effectChainBuilder(LinkedList<Core> cores, Document xmlDocument,XPath xPath) throws FileNotFoundException, UnsupportedEncodingException, XPathExpressionException{
+	   LinkedList<EffectChain> effectChains = new LinkedList<EffectChain>();
+	   PrintWriter  writer_EC= new PrintWriter("effectChains.txt", "UTF-8");
+	   for(Core core_src:cores){
+		   for(Task t_src: core_src.tasks){
+			   for(Core core_dst:cores){
+				   for(Task t_dst: core_dst.tasks){
+					   if(!t_src.name.equals(t_dst.name) && !t_src.name.substring(0,1).equals("I") && !t_src.name.substring(0,1).equals("A")
+							   && !t_dst.name.substring(0,1).equals("A")){
+						   for(Runnable runnable_src:t_src.runnables) {
+							   for(Runnable runnable_dst:t_dst.runnables) {
+								   for(Label label_src:runnable_src.labels) {
+									   for(Label label_dst:runnable_dst.labels) {
+										   	  String src_operation=label_src.typeOfAccess;
+											  String dst_operation=label_dst.typeOfAccess;
+											  if(label_src.name.equals(label_dst.name) && src_operation.equals("W")
+													  && !src_operation.equals(dst_operation)){
+												  EffectChain ec =new EffectChain();
+												  String comm="Intra";
+												  String p="\t runnable_src: "+runnable_src.name+"("+t_src.name+","+core_src.name+","+label_src.name+")"+
+														  " || runnable_dst: "+runnable_dst.name+"("+t_dst.name+","+core_dst.name+","+label_dst.name+")";
+												  writer_EC.println(p);
+												  ec.res+=p;
+												  ec.addElement(runnable_src, t_src);
+												  ec.addElement(runnable_dst, t_dst);
+												  ec.cores.add(Integer.parseInt(core_src.name.replace("Scheduler_CORE", "")));
+												  ec.cores.add(Integer.parseInt(core_dst.name.replace("Scheduler_CORE", "")));
+													 
+												  ec.steps++;
+												  StringRunnable result;
+												  result=buildRelation(cores,core_dst,t_dst,runnable_dst);
+												  if(result!=null) {
+													  writer_EC.println(result.result);
+													  ec.res+=result.result;
+													  ec.addElement(result.runnable_src, result.task_dst);
+													  ec.cores.add(Integer.parseInt(result.core_dst.name.replace("Scheduler_CORE", "")));
+													  ec.cores.add(Integer.parseInt(core_dst.name.replace("Scheduler_CORE", "")));
+													  ec.steps++;
+
+												  }
+												  else {
+													  effectChains.add(ec);
+													  ec.computeNumCores();
+													  break;
+												  }
+												  String tab="";
+												  for(int i=0;i<10;i++) {
+													  tab+="\t";
+													  result=buildRelation(cores,result.core_dst,result.task_dst,result.runnable_src);
+													  if(result!=null) {
+														  writer_EC.println(tab+result.result);
+														  ec.res+=tab+result.result;
+														  ec.addElement(result.runnable_src, result.task_dst);
+														  ec.cores.add(Integer.parseInt(result.core_dst.name.replace("Scheduler_CORE", "")));
+														  ec.cores.add(Integer.parseInt(core_dst.name.replace("Scheduler_CORE", "")));
+														  ec.steps++;
+														 
+													  } else {
+														  effectChains.add(ec);
+														  ec.computeNumCores();
+														  break;
+													  }
+												  }
+												  //effectChains.add(ec);
+											  }
+									   }
+								   }
+							   }
+						   }
+
+					   }
+					   
+				   }
+				   
+			   }
+
+		   }
+	   }
+	   writer_EC.close();
+	   return effectChains;
+   }
+   
+   static class StringRunnable{
+	   String result;
+	   Runnable runnable_src;
+	   Core core_dst;
+	   Task task_dst;
+	   public StringRunnable(String result,Runnable runnable_src,Core core_dst,Task task_dst) {
+		   this.result=result;
+		   this.runnable_src=runnable_src;
+		   this.core_dst=core_dst;
+		   this.task_dst=task_dst;
+	   }
+   }
+   
+   static StringRunnable buildRelation(LinkedList<Core> cores,Core core_src,Task t_src,Runnable runnable_src) {
+	   String result="";
+
+	   for(Core core_dst:cores){
+		   for(Task t_dst: core_dst.tasks){
+			   if(!t_src.name.equals(t_dst.name)&& !t_src.name.substring(0,1).equals("A")
+					   && !t_dst.name.substring(0,1).equals("A")){
+				   for(Runnable runnable_dst:t_dst.runnables) {
+					   for(Label label_src:runnable_src.labels) {
+						   for(Label label_dst:runnable_dst.labels) {
+							      int rand = (int) (Math.random() *2);
+							      //if(rand>0) {
+								   	  String src_operation=label_src.typeOfAccess;
+									  String dst_operation=label_dst.typeOfAccess;
+									  if(label_src.name.equals(label_dst.name) && src_operation.equals("W")
+											  && !src_operation.equals(dst_operation)){
+										  result="\t\t\t runnable_src: "+runnable_src.name+"("+t_src.name+","+core_src.name+","+label_src.name+")"+
+										  " || runnable_dst: "+runnable_dst.name+"("+t_dst.name+","+core_dst.name+","+label_dst.name+")";
+									      StringRunnable relation = new StringRunnable(result,runnable_dst,core_dst,t_dst);
+										  return relation;
+	
+									//  }
+							      }else {
+							    	  continue;
+							      }
+						   }
+					   }
+				   }
+			   }
+		   }
+	   }
+	   
+	   return null;
+   }
 
    private static String typeOfCommunication(String t_src, String t_dst) {
 	   String communicationType="h";
@@ -355,7 +485,6 @@ public class helper_communication {
     		   break;
     	   }
        }	
-       
 	   String taskRunnable;
 	   String coreTask; //index core
 	   int coreIndex;
